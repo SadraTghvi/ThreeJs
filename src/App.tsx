@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 
-import { Route, Routes } from 'react-router-dom'
 import Home from 'Screens/Home'
+import { Route, Routes } from 'react-router-dom'
 
 import './style/base.scss'
 import './style/font/imports.scss'
