@@ -7,6 +7,8 @@ import './style/base.scss'
 import './style/font/imports.scss'
 
 const App: FC = () => {
+    global.AngleToRadian = AndgleInDeg => (Math.PI / 180) * AndgleInDeg
+
     return (
         <>
             <MainContent />
