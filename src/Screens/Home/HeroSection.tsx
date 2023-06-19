@@ -1,5 +1,6 @@
 import React, { FC } from 'react'
 
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 
 import './style/herosection.scss'
@@ -7,7 +8,10 @@ import './style/herosection.scss'
 const HeroSection: FC = () => {
     return (
         <div className='hero-container'>
-            <Canvas camera={{ position: [0, 1, 8] }}>
+            <Canvas>
+                <PerspectiveCamera makeDefault position={[0, 1, 8]} />
+                <OrbitControls />
+
                 <mesh position={[0, 1, 0]}>
                     <sphereGeometry args={[1, 20, 20]} />
                     <meshStandardMaterial color={'white'} />
