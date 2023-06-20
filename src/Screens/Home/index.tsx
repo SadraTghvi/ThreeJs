@@ -9,7 +9,7 @@ import './style/home.scss'
 const Home: FC = () => {
     return (
         <main className='home-container'>
-            <Canvas>
+            <Canvas shadows>
                 <HeroSection />
             </Canvas>
         </main>
