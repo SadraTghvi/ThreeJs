@@ -26,16 +26,35 @@ const HeroSection: FC = () => {
     useEffect(() => {
         if (!ballRef.current || !ballRef.current.position) return
 
-        gsap.to(ballRef.current?.position, {
-            x: 9,
-            duration: 3,
-            ease: 'bounce',
-        })
-        gsap.to(ballRef.current?.position, {
-            y: 1,
-            duration: 1,
-            ease: 'bounce',
-        })
+        const timeline = gsap.timeline()
+
+        timeline.to(
+            ballRef.current?.position,
+            {
+                x: 14,
+                duration: 2.5,
+                ease: 'ease',
+            },
+            ''
+        )
+        timeline.to(
+            ballRef.current?.position,
+            {
+                y: 1,
+                duration: 1,
+                ease: 'bounce',
+            },
+            ''
+        )
+        timeline.to(
+            ballRef.current?.position,
+            {
+                y: -40,
+                duration: 3,
+                ease: 'bounce',
+            },
+            '-=1.15'
+        )
     }, [ballRef.current])
 
     useEffect(() => {
@@ -44,7 +63,7 @@ const HeroSection: FC = () => {
 
     return (
         <>
-            <PerspectiveCamera makeDefault position={[10, 10, 15]} />
+            <PerspectiveCamera makeDefault position={[10, 10, 30]} />
             <OrbitControls
                 ref={controls}
                 maxPolarAngle={1.5}
