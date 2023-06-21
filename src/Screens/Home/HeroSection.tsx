@@ -2,7 +2,8 @@ import React, { FC, useEffect, useRef } from 'react'
 
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
-import { SpotLight } from 'three'
+import gsap from 'gsap'
+import { Mesh, SpotLight } from 'three'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 
 import './style/herosection.scss'
@@ -10,15 +11,32 @@ import './style/herosection.scss'
 const HeroSection: FC = () => {
     const controls = useRef<OrbitControlsImpl>(null)
     const lightControls = useRef<SpotLight>(null)
+    const ballRef = useRef<Mesh>(null)
 
     useFrame(state => {
         const { x } = state.mouse
+        x
         // controls.current?.setAzimuthalAngle(-AngleToRadian(x * 250))
         // controls.current?.setPolarAngle(y + 1)
         // controls.current?.update()
 
-        lightControls.current?.position.setX(x * 50)
+        // lightControls.current?.position.setX(x * 50)
     })
+
+    useEffect(() => {
+        if (!ballRef.current || !ballRef.current.position) return
+
+        gsap.to(ballRef.current?.position, {
+            x: 9,
+            duration: 3,
+            ease: 'bounce',
+        })
+        gsap.to(ballRef.current?.position, {
+            y: 1,
+            duration: 1,
+            ease: 'bounce',
+        })
+    }, [ballRef.current])
 
     useEffect(() => {
         console.log(lightControls.current)
@@ -26,16 +44,16 @@ const HeroSection: FC = () => {
 
     return (
         <>
-            <PerspectiveCamera makeDefault position={[0, 1, 15]} />
+            <PerspectiveCamera makeDefault position={[10, 10, 15]} />
             <OrbitControls
                 ref={controls}
                 maxPolarAngle={1.5}
                 enablePan
-                autoRotate
+                // autoRotate
             />
 
             {/* ball */}
-            <mesh position={[0, 2, 0]} castShadow>
+            <mesh ref={ballRef} position={[-3, 5, 0]} castShadow>
                 <sphereGeometry args={[1]} />
                 <meshStandardMaterial color={'white'} />
             </mesh>
@@ -53,8 +71,10 @@ const HeroSection: FC = () => {
             <spotLight
                 ref={lightControls}
                 args={['white', 1]}
-                position={[0, 5, 0]}
-                distance={50}
+                position={[-10, 10, 0]}
+                angle={-AngleToRadian(45)}
+                distance={100}
+                penumbra={1}
                 castShadow
             />
             {/*  */}
