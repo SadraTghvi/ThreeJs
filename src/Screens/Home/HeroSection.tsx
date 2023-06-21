@@ -46,6 +46,11 @@ const HeroSection: FC = () => {
             },
             ''
         )
+        gsap.to(ballRef.current?.rotation, {
+            z: -50,
+            duration: 5,
+            ease: 'linear',
+        })
         timeline.to(
             ballRef.current?.position,
             {
@@ -72,8 +77,8 @@ const HeroSection: FC = () => {
             />
 
             {/* ball */}
-            <mesh ref={ballRef} position={[-3, 5, 0]} castShadow>
-                <sphereGeometry args={[1]} />
+            <mesh ref={ballRef} position={[-3, 8, 0]} castShadow>
+                <sphereGeometry args={[1, 4, 4]} />
                 <meshStandardMaterial color={'white'} />
             </mesh>
             {/* ball-end */}
