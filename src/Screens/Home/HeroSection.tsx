@@ -1,10 +1,13 @@
 import React, { FC, useEffect, useRef } from 'react'
 
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useLoader } from '@react-three/fiber'
 import gsap from 'gsap'
+import * as THREE from 'three'
 import { Mesh, SpotLight } from 'three'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
+
+import img from '../../static/myLogo.jpg'
 
 import './style/herosection.scss'
 
@@ -12,6 +15,8 @@ const HeroSection: FC = () => {
     const controls = useRef<OrbitControlsImpl>(null)
     const lightControls = useRef<SpotLight>(null)
     const ballRef = useRef<Mesh>(null)
+
+    const texture = useLoader(THREE.TextureLoader, img)
 
     useFrame(state => {
         const { x } = state.mouse
@@ -28,15 +33,15 @@ const HeroSection: FC = () => {
 
         const timeline = gsap.timeline()
 
-        timeline.to(
-            ballRef.current?.position,
-            {
-                x: 14,
-                duration: 2.5,
-                ease: 'ease',
-            },
-            ''
-        )
+        // timeline.to(
+        //     ballRef.current?.position,
+        //     {
+        //         x: 14,
+        //         duration: 2.5,
+        //         ease: 'ease',
+        //     },
+        //     ''
+        // )
         timeline.to(
             ballRef.current?.position,
             {
@@ -46,20 +51,20 @@ const HeroSection: FC = () => {
             },
             ''
         )
-        gsap.to(ballRef.current?.rotation, {
-            z: -50,
-            duration: 5,
-            ease: 'linear',
-        })
-        timeline.to(
-            ballRef.current?.position,
-            {
-                y: -40,
-                duration: 3,
-                ease: 'bounce',
-            },
-            '-=1.15'
-        )
+        // gsap.to(ballRef.current?.rotation, {
+        //     z: -50,
+        //     duration: 5,
+        //     ease: 'linear',
+        // })
+        // timeline.to(
+        //     ballRef.current?.position,
+        //     {
+        //         y: -40,
+        //         duration: 3,
+        //         ease: 'bounce',
+        //     },
+        //     '-=1.15'
+        // )
     }, [ballRef.current])
 
     useEffect(() => {
@@ -78,8 +83,13 @@ const HeroSection: FC = () => {
 
             {/* ball */}
             <mesh ref={ballRef} position={[-3, 8, 0]} castShadow>
-                <sphereGeometry args={[1, 4, 4]} />
-                <meshStandardMaterial color={'white'} />
+                <sphereGeometry attach='geometry' args={[1]} />
+                <meshStandardMaterial
+                    attach={'material'}
+                    color={'white'}
+                    // @ts-ignore
+                    map={texture}
+                />
             </mesh>
             {/* ball-end */}
 
@@ -91,7 +101,7 @@ const HeroSection: FC = () => {
             {/* floor-end */}
 
             {/*  */}
-            {/* <ambientLight args={['white']} intensity={1} /> */}
+            <ambientLight args={['white']} intensity={1} />
             <spotLight
                 ref={lightControls}
                 args={['white', 1]}
