@@ -22,7 +22,7 @@ const HeroSection: FC = () => {
     const texture = useLoader(THREE.TextureLoader, img)
     texture
 
-    const timeline = gsap.timeline()
+    // const timeline = gsap.timeline()
 
     // useFrame(state => {
     //     const { x } = state.mouse
@@ -46,16 +46,16 @@ const HeroSection: FC = () => {
         //     },
         //     ''
         // )
-        timeline.to(
-            ballRef.current?.position,
-            {
-                y: 5,
-                duration: 1,
-                ease: 'linear',
-                delay: 0.5,
-            },
-            ''
-        )
+        // timeline.to(
+        //     ballRef.current?.position,
+        //     {
+        //         y: 5,
+        //         duration: 1,
+        //         ease: 'linear',
+        //         delay: 0.5,
+        //     },
+        //     ''
+        // )
         // gsap.to(ballRef.current?.rotation, {
         //     z: -50,
         //     duration: 5,
@@ -75,33 +75,33 @@ const HeroSection: FC = () => {
     useEffect(() => {
         if (!spotLightRef.current || !spotLightRef.current.position) return
 
-        for (let i = 0; i < 5; i++) {
-            timeline.to(
-                spotLightRef.current!.position,
-                {
-                    x: -10,
-                    duration: 1.7,
-                    ease: CustomEase.create(
-                        'custom',
-                        'M0,0 C0.072,0.394 0.245,0.563 0.296,0.618 0.344,0.67 0.584,1 1,1 '
-                    ),
-                },
-                '+=0'
-            )
+        // for (let i = 0; i < 5; i++) {
+        //     timeline.to(
+        //         spotLightRef.current!.position,
+        //         {
+        //             x: -10,
+        //             duration: 1.7,
+        //             ease: CustomEase.create(
+        //                 'custom',
+        //                 'M0,0 C0.072,0.394 0.245,0.563 0.296,0.618 0.344,0.67 0.584,1 1,1 '
+        //             ),
+        //         },
+        //         '+=0'
+        //     )
 
-            timeline.to(
-                spotLightRef.current!.position,
-                {
-                    x: 10,
-                    duration: 1.7,
-                    ease: CustomEase.create(
-                        'custom',
-                        'M0,0 C0.072,0.394 0.245,0.563 0.296,0.618 0.344,0.67 0.584,1 1,1 '
-                    ),
-                },
-                '+=0'
-            )
-        }
+        //     timeline.to(
+        //         spotLightRef.current!.position,
+        //         {
+        //             x: 10,
+        //             duration: 1.7,
+        //             ease: CustomEase.create(
+        //                 'custom',
+        //                 'M0,0 C0.072,0.394 0.245,0.563 0.296,0.618 0.344,0.67 0.584,1 1,1 '
+        //             ),
+        //         },
+        //         '+=0'
+        //     )
+        // }
     }, [spotLightRef.current])
 
     return (
@@ -115,7 +115,7 @@ const HeroSection: FC = () => {
             />
 
             {/* ball */}
-            {/* <mesh ref={ballRef} position={[0, 1, 0]} castShadow>
+            <mesh ref={ballRef} position={[0, 1, 0]} castShadow>
                 <sphereGeometry attach='geometry' args={[1]} />
                 <meshStandardMaterial
                     attach={'material'}
@@ -123,25 +123,31 @@ const HeroSection: FC = () => {
                     // @ts-ignore
                     map={texture}
                 />
-            </mesh> */}
+            </mesh>
             {/* ball-end */}
 
             {/* floor */}
-            <mesh rotation={[-AngleToRadian(90), 0, 0]} receiveShadow>
+            {/* <mesh rotation={[-AngleToRadian(90), 0, 0]} receiveShadow>
                 <planeGeometry args={[20, 20]} />
                 <meshStandardMaterial color={'blue'} />
-            </mesh>
+            </mesh> */}
             {/* floor-end */}
 
             {/*  */}
-            {/* <ambientLight args={['white']} intensity={1} /> */}
-            <pointLight
+            <ambientLight args={['white']} intensity={0.6} />
+            <spotLight
                 ref={spotLightRef}
-                args={['white', 0.2]}
-                position={[5, 1, 0]}
+                args={['white', 1]}
+                position={[0, 13, 0]}
+                penumbra={1}
                 castShadow
             />
             {/*  */}
+
+            <mesh position={[0, 50 / 2, 0]} receiveShadow>
+                <boxGeometry args={[35, 50, 35]} />
+                <meshStandardMaterial color={'grey'} side={THREE.BackSide} />
+            </mesh>
         </>
     )
 }
