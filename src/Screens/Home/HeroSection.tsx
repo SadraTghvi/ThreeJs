@@ -1,8 +1,9 @@
 import React, { FC, useEffect, useRef } from 'react'
 
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
-import { useFrame, useLoader } from '@react-three/fiber'
+import { useLoader } from '@react-three/fiber'
 import gsap from 'gsap'
+import { CustomEase } from 'gsap/CustomEase'
 import * as THREE from 'three'
 import { Mesh, SpotLight } from 'three'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
@@ -11,27 +12,30 @@ import img from '../../static/myLogo.jpg'
 
 import './style/herosection.scss'
 
+gsap.registerPlugin(CustomEase)
+
 const HeroSection: FC = () => {
     const controls = useRef<OrbitControlsImpl>(null)
-    const lightControls = useRef<SpotLight>(null)
+    const spotLightRef = useRef<SpotLight>(null)
     const ballRef = useRef<Mesh>(null)
 
     const texture = useLoader(THREE.TextureLoader, img)
+    texture
 
-    useFrame(state => {
-        const { x } = state.mouse
-        x
-        // controls.current?.setAzimuthalAngle(-AngleToRadian(x * 250))
-        // controls.current?.setPolarAngle(y + 1)
-        // controls.current?.update()
+    const timeline = gsap.timeline()
 
-        // lightControls.current?.position.setX(x * 50)
-    })
+    // useFrame(state => {
+    //     const { x } = state.mouse
+    //     x
+    //     // controls.current?.setAzimuthalAngle(-AngleToRadian(x * 250))
+    //     // controls.current?.setPolarAngle(y + 1)
+    //     // controls.current?.update()
+
+    //     // spotLightRef.current?.position.setX(x * 50)
+    // })
 
     useEffect(() => {
         if (!ballRef.current || !ballRef.current.position) return
-
-        const timeline = gsap.timeline()
 
         // timeline.to(
         //     ballRef.current?.position,
@@ -45,9 +49,10 @@ const HeroSection: FC = () => {
         timeline.to(
             ballRef.current?.position,
             {
-                y: 1,
+                y: 5,
                 duration: 1,
-                ease: 'bounce',
+                ease: 'linear',
+                delay: 0.5,
             },
             ''
         )
@@ -68,8 +73,36 @@ const HeroSection: FC = () => {
     }, [ballRef.current])
 
     useEffect(() => {
-        console.log(lightControls.current)
-    }, [lightControls.current])
+        if (!spotLightRef.current || !spotLightRef.current.position) return
+
+        for (let i = 0; i < 5; i++) {
+            timeline.to(
+                spotLightRef.current!.position,
+                {
+                    x: -10,
+                    duration: 1.7,
+                    ease: CustomEase.create(
+                        'custom',
+                        'M0,0 C0.072,0.394 0.245,0.563 0.296,0.618 0.344,0.67 0.584,1 1,1 '
+                    ),
+                },
+                '+=0'
+            )
+
+            timeline.to(
+                spotLightRef.current!.position,
+                {
+                    x: 10,
+                    duration: 1.7,
+                    ease: CustomEase.create(
+                        'custom',
+                        'M0,0 C0.072,0.394 0.245,0.563 0.296,0.618 0.344,0.67 0.584,1 1,1 '
+                    ),
+                },
+                '+=0'
+            )
+        }
+    }, [spotLightRef.current])
 
     return (
         <>
@@ -82,7 +115,7 @@ const HeroSection: FC = () => {
             />
 
             {/* ball */}
-            <mesh ref={ballRef} position={[-3, 8, 0]} castShadow>
+            {/* <mesh ref={ballRef} position={[0, 1, 0]} castShadow>
                 <sphereGeometry attach='geometry' args={[1]} />
                 <meshStandardMaterial
                     attach={'material'}
@@ -90,7 +123,7 @@ const HeroSection: FC = () => {
                     // @ts-ignore
                     map={texture}
                 />
-            </mesh>
+            </mesh> */}
             {/* ball-end */}
 
             {/* floor */}
@@ -101,14 +134,11 @@ const HeroSection: FC = () => {
             {/* floor-end */}
 
             {/*  */}
-            <ambientLight args={['white']} intensity={1} />
-            <spotLight
-                ref={lightControls}
-                args={['white', 1]}
-                position={[-10, 10, 0]}
-                angle={-AngleToRadian(45)}
-                distance={100}
-                penumbra={1}
+            {/* <ambientLight args={['white']} intensity={1} /> */}
+            <pointLight
+                ref={spotLightRef}
+                args={['white', 0.2]}
+                position={[5, 1, 0]}
                 castShadow
             />
             {/*  */}
