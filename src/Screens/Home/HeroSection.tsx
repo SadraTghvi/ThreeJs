@@ -8,9 +8,11 @@ import * as THREE from 'three'
 import { Mesh, SpotLight } from 'three'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 
-import img from '../../static/myLogo.jpg'
-
 import './style/herosection.scss'
+
+const heightMapImg = require('../../static/ball/Height.png')
+const roughnessMapImg = require('../../static/ball/Roughness.jpg')
+const NormalMapImg = require('../../static/ball/Normal.jpg')
 
 gsap.registerPlugin(CustomEase)
 
@@ -19,9 +21,9 @@ const HeroSection: FC = () => {
     const spotLightRef = useRef<SpotLight>(null)
     const ballRef = useRef<Mesh>(null)
 
-    const texture = useLoader(THREE.TextureLoader, img)
-    texture
-
+    const heightMap = useLoader(THREE.TextureLoader, heightMapImg)
+    const RoughnessMap = useLoader(THREE.TextureLoader, roughnessMapImg)
+    const NormalMap = useLoader(THREE.TextureLoader, NormalMapImg)
     // const timeline = gsap.timeline()
 
     // useFrame(state => {
@@ -114,17 +116,39 @@ const HeroSection: FC = () => {
                 // autoRotate
             />
 
-            {/* ball */}
+            {/* balls */}
+
             <mesh ref={ballRef} position={[0, 1, 0]} castShadow>
+                <sphereGeometry attach='geometry' args={[1]} />
+                <meshStandardMaterial
+                    attach={'material'}
+                    color={'blue'}
+                    // @ts-ignore
+                    displacementMap={heightMap}
+                />
+            </mesh>
+            <mesh position={[5, 1, 0]} castShadow>
+                <sphereGeometry attach='geometry' args={[1]} />
+                <meshStandardMaterial
+                    attach={'material'}
+                    color={'red'}
+                    // @ts-ignore
+                    roughnessMap={RoughnessMap}
+                    roughness={10}
+                />
+            </mesh>
+            <mesh position={[-5, 1, 0]} castShadow>
                 <sphereGeometry attach='geometry' args={[1]} />
                 <meshStandardMaterial
                     attach={'material'}
                     color={'white'}
                     // @ts-ignore
-                    map={texture}
+                    normalMap={NormalMap}
+                    roughness={1}
                 />
             </mesh>
-            {/* ball-end */}
+
+            {/* balls-end */}
 
             {/* floor */}
             {/* <mesh rotation={[-AngleToRadian(90), 0, 0]} receiveShadow>
@@ -134,11 +158,11 @@ const HeroSection: FC = () => {
             {/* floor-end */}
 
             {/*  */}
-            <ambientLight args={['white']} intensity={0.6} />
+            {/* <ambientLight args={['white']} intensity={0.6} /> */}
             <spotLight
                 ref={spotLightRef}
                 args={['white', 1]}
-                position={[0, 13, 0]}
+                position={[8, 13, 5]}
                 penumbra={1}
                 castShadow
             />
